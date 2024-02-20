@@ -1,9 +1,8 @@
-import { doc, getDoc } from "@firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getSingleTodo } from "../api/todo-api";
 import TodoItem from "../components/todo/TodoItem";
-import { TODOS_COLLECTION, TodoContext } from "../context/TodoContext";
-import { db } from "../firebase/firebaseConfig";
+import { TodoContext } from "../context/TodoContext";
 
 const Detail = () => {
   const { todoId } = useParams();
@@ -12,13 +11,9 @@ const Detail = () => {
 
   useEffect(() => {
     const fetchTodo = async () => {
-      const docRef = doc(db, TODOS_COLLECTION, todoId);
-      const docSnap = await getDoc(docRef);
+      const data = getSingleTodo(todoId);
 
-      setTodo({
-        ...docSnap.data(),
-        id: docSnap.id,
-      });
+      setTodo(data);
     };
 
     fetchTodo();

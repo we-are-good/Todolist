@@ -12,6 +12,11 @@ export const getTodos = async () => {
   return response.data;
 };
 
+export const getSingleTodo = async (id) => {
+  const { data } = await todoClient.get(`/${id}`);
+  return data;
+};
+
 export const createTodo = async (todo) => {
   const { data } = await todoClient.post("/", todo);
   return data; // return은 사실 필요 없다.
