@@ -1,10 +1,10 @@
 {
   "todos": [
     {
-      "id": 1,
-      "title": "Study React",
-      "content": "Learn about components",
-      "deadline": "2024-01-31",
+      "id": "0f1fc966-6635-4f58-8ad4-ac071e8ae304",
+      "title": "베이직반",
+      "content": "과제하기",
+      "deadline": "",
       "isDone": false
     }
   ]
