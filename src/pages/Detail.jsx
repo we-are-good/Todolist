@@ -3,26 +3,32 @@ import { useParams } from "react-router-dom";
 import { getSingleTodo } from "../api/todo-api";
 import TodoItem from "../components/todo/TodoItem";
 import { TodoContext } from "../context/TodoContext";
+import { useQuery } from "@tanstack/react-query";
 
 const Detail = () => {
   const { todoId } = useParams();
-  const [todo, setTodo] = useState(null);
   const { onDeleteTodoItem, onToggleTodoItem } = useContext(TodoContext);
+  const {
+    data: todo,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["todo", todoId],
+    queryFn: () => getSingleTodo(todoId),
+  });
 
-  useEffect(() => {
-    const fetchTodo = async () => {
-      const data = getSingleTodo(todoId);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-      setTodo(data);
-    };
-
-    fetchTodo();
-  }, [todoId]);
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   const handleDeleteTodoItem = async (id) => {
     await onDeleteTodoItem(id);
 
-    setTodo(null);
+    // setTodo(null);
   };
 
   const handleToggleTodoItem = async (id) => {
@@ -34,10 +40,6 @@ const Detail = () => {
       isDone: !prevTodo.isDone,
     }));
   };
-
-  if (!todo) {
-    return <div>로딩 중...</div>;
-  }
 
   return (
     <section>

@@ -1,11 +1,28 @@
-import { useContext, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { getTodos } from "../../api/todo-api";
 import TodoForm from "./TodoForm";
 import TodoList from "./TodoList";
-import { TodoContext } from "../../context/TodoContext";
 
 const TodoController = () => {
   const [sortOrder, setSortOrder] = useState("asc");
-  const { todos, setTodos } = useContext(TodoContext);
+
+  const {
+    data: todos,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["todos"],
+    queryFn: getTodos,
+  });
+
+  if (isLoading) {
+    return <div>Is Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   const onChangeSortOrder = (e) => {
     const nextSortOrder = e.target.value;
@@ -14,23 +31,23 @@ const TodoController = () => {
     setSortOrder(nextSortOrder);
   };
 
-  useEffect(() => {
-    if (sortOrder === "asc") {
-      // NOTE: 투두 리스트 오름차순 정렬
-      setTodos((prevTodos) =>
-        [...prevTodos].sort(
-          (a, b) => new Date(a.deadline) - new Date(b.deadline)
-        )
-      );
+  // useEffect(() => {
+  //   if (sortOrder === "asc") {
+  //     // NOTE: 투두 리스트 오름차순 정렬
+  //     setTodos((prevTodos) =>
+  //       [...prevTodos].sort(
+  //         (a, b) => new Date(a.deadline) - new Date(b.deadline)
+  //       )
+  //     );
 
-      return;
-    }
+  //     return;
+  //   }
 
-    // NOTE: 투두 리스트 내림차순 정렬
-    setTodos((prevTodos) =>
-      [...prevTodos].sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
-    );
-  }, [sortOrder, setTodos]);
+  //   // NOTE: 투두 리스트 내림차순 정렬
+  //   setTodos((prevTodos) =>
+  //     [...prevTodos].sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+  //   );
+  // }, [sortOrder, setTodos]);
 
   // useMemo
   const workingTodos = todos.filter((todo) => !todo.isDone);

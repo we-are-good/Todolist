@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const todoClient = axios.create({
-  baseURL: "http://localhost:5001/todos",
+  baseURL: "http://localhost:5002/todos",
   headers: {
     "Content-Type": "application/json",
   },
